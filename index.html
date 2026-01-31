@@ -12,7 +12,6 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body { 
-     <body>
       -webkit-font-smoothing: antialiased; 
       background-color: #020617;
       font-family: -apple-system, system-ui, sans-serif;
@@ -47,89 +46,58 @@
     const { useState, useMemo, useEffect } = React;
 
     const INITIAL_MASTER_DATA = [
-    { name: 'Akabane133-24432-GB2',    qty: 20500, lots: 1, avgTime: 0.003   },
-    { name: 'Akabane-24432-028-6802(88)',    qty: 25600, lots: 1, avgTime: 0.00273 }, 
-    { name: 'Akabane66-24432-028-3002', qty: 1930,  lots: 1, avgTime: 0.011   },
-    { name: 'Akabane-2252-822-6104', qty:60000,  lots: 1, avgTime: 0.005   },    
-    { name: 'BOHSE 450',               qty: 30,    lots: 5, avgTime: 3.4     },
-    { name: 'BOHSE',                     qty: 80,    lots: 1, avgTime: 3.1     },
-    { name: 'FUZISERA',                qty: 20,    lots: 3, avgTime: 4.0     },
-    { name: 'FUZISERA PPEA57JA',     qty: 40000,   lots: 3, avgTime: 0.004875 },
-     { name: 'FUZISAKI Bolt',     qty: 191,   lots: 1, avgTime: 0.263 }, 
-    { name: 'GOTOU-六穴段B19M10',      qty: 670,    lots: 1, avgTime: 0.2388  },
-    { name: 'GOTOU-66-B8M8F',        qty: 875,    lots: 1, avgTime: 0.1828 },
-    { name: 'GOTOU-RP10連続ピン',       qty: 250,    lots: 1, avgTime: 0.24   },
-    { name: 'HOKUTO-ビットw3/8l      font-weight: 500;
-      font-size: 13px;
-    }
-    .search-result-item:active {
-      background-color: #4f46e5;
-      color: white;
-    }
-    .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-    .custom-scrollbar::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
-  </style>
-</head>
-<body class="text-slate-300">
-  <div id="root"></div>
-
-  <script type="text/babel">
-    const { useState, useMemo, useEffect } = React;
-
-    const INITIAL_MASTER_DATA = [
-    { name: 'Akabane133-24432-GB2',    qty: 20500, lots: 1, avgTime: 0.003   },
-    { name: 'Akabane-24432-028-6802(88)',    qty: 25600, lots: 1, avgTime: 0.00273 }, 
-    { name: 'Akabane66-24432-028-3002', qty: 1930,  lots: 1, avgTime: 0.011   },
-    { name: 'Akabane-2252-822-6104', qty:60000,  lots: 1, avgTime: 0.005   },  
-    { name: 'AKIYAMA-ビボット4*12', qty:128,  lots: 1, avgTime: 0.234   },  
-    { name: 'BOHSE 450',               qty: 30,    lots: 5, avgTime: 3.4     },
-    { name: 'BOHSE',                     qty: 80,    lots: 1, avgTime: 3.1     },
-    { name: 'FUZISERA',                qty: 20,    lots: 3, avgTime: 4.0     },
-    { name: 'FUZISERA PPEA57JA',       qty: 40000,   lots: 3, avgTime: 0.004875 },
-     { name: 'FUZISAKI Bolt',          qty: 191,   lots: 1, avgTime: 0.263 }, 
-    { name: 'GOTOU-六穴段B19M10',      qty: 670,    lots: 1, avgTime: 0.2388  },
-    { name: 'GOTOU-66-B8M8F',          qty: 875,    lots: 1, avgTime: 0.1828 },
-    { name: 'GOTOU-RP10連続ピン',       qty: 250,    lots: 1, avgTime: 0.24   },
-    { name: 'HOKUTO-ビットw3/8l20',    qty: 480,     lots: 1, avgTime: 0.25   },    
-    { name: 'KOMA',                    qty: 8,     lots: 2, avgTime: 5       },
-    { name: 'KOBAYU',                  qty: 20000,    lots: 1, avgTime: 0.003 },
-    { name: 'KOYAUCHI',                qty: 237,   lots: 1, avgTime: 0.25    },
-    { name: 'Katsumika',               qty: 400,   lots: 1, avgTime: 0.25    },
-    { name: 'Khamida',                 qty: 4500,  lots: 3, avgTime: 0.1     },
-    { name: 'Maeda-MD000425',        qty: 41000,  lots: 1, avgTime: 0.00402   },
-    { name: 'MAEDA-NH 625101',         qty: 144000,  lots: 1, avgTime: 0.000833 },
-    { name: 'MAEDA-45',                qty: 180000,lots: 1, avgTime: 0.00133 },
-    { name: 'MAEDA 8941712890(😮)',    qty: 6400, lots: 1, avgTime: 0.028    },
-    { name: 'MAEDA-11058H100A',        qty: 40000, lots: 1, avgTime: 0.0117  }, 
-    { name: 'NDN 77-45',               qty: 340,   lots: 1, avgTime: 0.29    },
-    { name: 'NDN BTP 3*4(177)',        qty: 140,   lots: 1, avgTime: 0.25    },
-    { name: 'NDN トラス4*7(177)',        qty: 144,   lots: 1, avgTime: 0.243    },
-    { name: 'NDN blue',                qty: 82,    lots: 1, avgTime: 0.25    },
-    { name: 'NDN45',                   qty: 150,   lots: 1, avgTime: 0.27    },
-    { name: 'Oota-H22151クレプ',        qty: 160,   lots: 1, avgTime: 0.3125    }, 
-    { name: 'SHINWA-10',               qty: 10,    lots: 1, avgTime: 4       },
-    { name: 'SHINWA-36',               qty: 18,    lots: 1, avgTime: 3.8     },
-    { name: 'SHINWA-6',                qty: 18,    lots: 3, avgTime: 5       },
-    { name: 'Sugawara SOP10T42*25*55', qty: 2392,  lots: 1, avgTime: 0.02508 },
-    { name: 'Takao',                   qty: 2445,  lots: 1, avgTime: 0.040   },
-    { name: 'Teppei PIN',              qty: 290,   lots: 1, avgTime: 0.28    },
-    { name: 'Rasen pin 8*43',          qty: 580,    lots: 1, avgTime: 0.246  },
-    { name: 'Tousho Gearplate',        qty: 4127,  lots: 1, avgTime: 0.06    },
-    { name: 'Toyo PN-2512-10',         qty: 460,   lots: 2, avgTime: 0.282   },
-    { name: 'Toushou-UA296A/Bロックプレート',   qty: 25015,  lots: 1, avgTime: 0.00579    }, 
-    { name: 'YAMASHITA',               qty: 50,    lots: 1, avgTime: 4.8     },
-    { name: 'Yamasita Pc ネジ4*12',     qty: 680,    lots: 1, avgTime: 0.2647     }, 
-    { name: 'TOYAMA-ナカオルP57)',        qty: 220,   lots: 1, avgTime: 0.318    },
-    { name: 'YASATO-6271',             qty: 270,   lots: 2, avgTime: 0.24    },
-    { name: 'YASATO	109530-0091',      qty: 108,   lots: 1, avgTime: 0.231   }, 
-    { name: 'YASATO-4010',             qty: 130,   lots: 2, avgTime: 0.324    },
-    { name: 'YASATO	2940',             qty: 168,   lots: 1, avgTime: 0.3   }, 
-    { name: 'Yamamoto',                qty: 50,    lots: 1, avgTime: 3.9     },
-    { name: 'Yoshida',                 qty: 195,   lots: 1, avgTime: 0.31    },
-    { name: 'Yoshigawa',                 qty: 100,   lots: 1, avgTime: 0.95    },   
-    { name: 'Yuu-85-K1071P',           qty: 30000,    lots: 1, avgTime: 0.00714 },
-    { name: 'Yuu small',               qty: 10,    lots: 1, avgTime: 3.5     },
+    { name: 'Akabane133-24432-GB2',                 qty: 20500, lots: 1, avgTime: 0.003   },
+    { name: 'Akabane-24432-028-6802(88)',        qty: 25600, lots: 1, avgTime: 0.00273 }, 
+    { name: 'Akabane66-24432-028-3002',          qty: 1930,  lots: 1, avgTime: 0.011   },
+    { name: 'Akabane-2252-822-6104',             qty:60000,  lots: 1, avgTime: 0.005   },  
+    { name: 'AKIYAMA-ビボット4*12',                 qty:128,   lots: 1, avgTime: 0.234   },  
+    { name: 'BOHSE 450',                         qty: 30,    lots: 5, avgTime: 3.4     },
+    { name: 'BOHSE',                             qty: 80,    lots: 1, avgTime: 3.1     },
+    { name: 'FUZISERA',                          qty: 20,    lots: 3, avgTime: 4.0     },
+    { name: 'FUZISERA PPEA57JA',                 qty: 40000,   lots: 3, avgTime: 0.004875 },
+    { name: 'FUZISAKI Bolt',                     qty: 191,   lots: 1, avgTime: 0.263 }, 
+    { name: 'GOTOU-六穴段B19M10',                qty: 670,    lots: 1, avgTime: 0.2388  },
+    { name: 'GOTOU-66-B8M8F',                    qty: 875,    lots: 1, avgTime: 0.1828 },
+    { name: 'GOTOU-RP10連続ピン',                 qty: 250,    lots: 1, avgTime: 0.24   },
+    { name: 'HOKUTO-ビットw3/8l20',                qty: 480,     lots: 1, avgTime: 0.25   },    
+    { name: 'KOMA',                              qty: 8,     lots: 2, avgTime: 5       },
+    { name: 'KOBAYU',                            qty: 20000,    lots: 1, avgTime: 0.003 },
+    { name: 'KOYAUCHI',                          qty: 237,   lots: 1, avgTime: 0.25    },
+    { name: 'Katsumika',                         qty: 400,   lots: 1, avgTime: 0.25    },
+    { name: 'Khamida',                           qty: 4500,  lots: 3, avgTime: 0.1     },
+    { name: 'Maeda-MD000425',                    qty: 41000,  lots: 1, avgTime: 0.00402   },
+    { name: 'MAEDA-NH 625101',                   qty: 144000,  lots: 1, avgTime: 0.000833 },
+    { name: 'MAEDA-45',                          qty: 180000,lots: 1, avgTime: 0.00133 },
+    { name: 'MAEDA 8941712890(😮)',             qty: 6400, lots: 1, avgTime: 0.028    },
+    { name: 'MAEDA-11058H100A',        		 qty: 40000, lots: 1, avgTime: 0.0117  }, 
+    { name: 'NDN 77-45',             		 qty: 340,   lots: 1, avgTime: 0.29    },
+    { name: 'NDN BTP 3*4(177)',       		 qty: 140,   lots: 1, avgTime: 0.25    },
+    { name: 'NDN トラス4*7(177)',      		 qty: 144,   lots: 1, avgTime: 0.243    },
+    { name: 'NDN blue',             		 qty: 82,    lots: 1, avgTime: 0.25    },
+    { name: 'NDN45',                 		 qty: 150,   lots: 1, avgTime: 0.27    },
+    { name: 'Oota-H22151クレプ',      		 qty: 160,   lots: 1, avgTime: 0.3125    }, 
+    { name: 'SHINWA-10',            		 qty: 10,    lots: 1, avgTime: 4       },
+    { name: 'SHINWA-36',             		 qty: 18,    lots: 1, avgTime: 3.8     },
+    { name: 'SHINWA-6',              		 qty: 18,    lots: 3, avgTime: 5       },
+    { name: 'Sugawara SOP10T42*25*55',		 qty: 2392,  lots: 1, avgTime: 0.02508 },
+    { name: 'Takao',                   		 qty: 2445,  lots: 1, avgTime: 0.040   },
+    { name: 'Teppei PIN',             		 qty: 290,   lots: 1, avgTime: 0.28    },
+    { name: 'Rasen pin 8*43',         		 qty: 580,    lots: 1, avgTime: 0.246  },
+    { name: 'Tousho Gearplate',       		 qty: 4127,  lots: 1, avgTime: 0.06    },
+    { name: 'Toyo PN-2512-10',         		 qty: 460,   lots: 2, avgTime: 0.282   },
+    { name: 'Toushou-UA296A/Bロックプレート',  	 qty: 25015,  lots: 1, avgTime: 0.00579    }, 
+    { name: 'YAMASHITA',              		 qty: 50,    lots: 1, avgTime: 4.8     },
+    { name: 'Yamasita Pc ネジ4*12',    		 qty: 680,    lots: 1, avgTime: 0.2647     }, 
+    { name: 'TOYAMA-ナカオルP57)',       		 qty: 220,   lots: 1, avgTime: 0.318    },
+    { name: 'YASATO-6271',            		 qty: 270,   lots: 2, avgTime: 0.24    },
+    { name: 'YASATO	109530-0091', 		 qty: 108,   lots: 1, avgTime: 0.231   }, 
+    { name: 'YASATO-4010',             		 qty: 130,   lots: 2, avgTime: 0.324    },
+    { name: 'YASATO	2940',           	 qty: 168,   lots: 1, avgTime: 0.3   }, 
+    { name: 'Yamamoto',              		 qty: 50,    lots: 1, avgTime: 3.9     },
+    { name: 'Yoshida',                		 qty: 195,   lots: 1, avgTime: 0.31    },
+    { name: 'Yoshigawa',                	 qty: 100,   lots: 1, avgTime: 0.95    },   
+    { name: 'Yuu-85-K1071P',          		 qty: 30000,    lots: 1, avgTime: 0.00714 },
+    { name: 'Yuu small',              		 qty: 10,    lots: 1, avgTime: 3.5     },
   ];
 
     const formatTime = (mins) => {
@@ -402,12 +370,3 @@
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
