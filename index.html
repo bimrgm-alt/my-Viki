@@ -59,6 +59,39 @@
     { name: 'GOTOU-六穴段B19M10',      qty: 670,    lots: 1, avgTime: 0.2388  },
     { name: 'GOTOU-66-B8M8F',        qty: 875,    lots: 1, avgTime: 0.1828 },
     { name: 'GOTOU-RP10連続ピン',       qty: 250,    lots: 1, avgTime: 0.24   },
+    { name: 'HOKUTO-ビットw3/8l      font-weight: 500;
+      font-size: 13px;
+    }
+    .search-result-item:active {
+      background-color: #4f46e5;
+      color: white;
+    }
+    .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+  </style>
+</head>
+<body class="text-slate-300">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useMemo, useEffect } = React;
+
+    const INITIAL_MASTER_DATA = [
+    { name: 'Akabane133-24432-GB2',    qty: 20500, lots: 1, avgTime: 0.003   },
+    { name: 'Akabane-24432-028-6802(88)',    qty: 25600, lots: 1, avgTime: 0.00273 }, 
+    { name: 'Akabane66-24432-028-3002', qty: 1930,  lots: 1, avgTime: 0.011   },
+    { name: 'Akabane-2252-822-6104', qty:60000,  lots: 1, avgTime: 0.005   },  
+    { name: 'AKIYAMA-ビボット4*12', qty:128,  lots: 1, avgTime: 0.234   },  
+    { name: 'BOHSE 450',               qty: 30,    lots: 5, avgTime: 3.4     },
+    { name: 'BOHSE',                     qty: 80,    lots: 1, avgTime: 3.1     },
+    { name: 'FUZISERA',                qty: 20,    lots: 3, avgTime: 4.0     },
+    { name: 'FUZISERA PPEA57JA',       qty: 40000,   lots: 3, avgTime: 0.004875 },
+     { name: 'FUZISAKI Bolt',          qty: 191,   lots: 1, avgTime: 0.263 }, 
+    { name: 'GOTOU-六穴段B19M10',      qty: 670,    lots: 1, avgTime: 0.2388  },
+    { name: 'GOTOU-66-B8M8F',          qty: 875,    lots: 1, avgTime: 0.1828 },
+    { name: 'GOTOU-RP10連続ピン',       qty: 250,    lots: 1, avgTime: 0.24   },
+    { name: 'HOKUTO-ビットw3/8l20',    qty: 480,     lots: 1, avgTime: 0.25   },    
     { name: 'KOMA',                    qty: 8,     lots: 2, avgTime: 5       },
     { name: 'KOBAYU',                  qty: 20000,    lots: 1, avgTime: 0.003 },
     { name: 'KOYAUCHI',                qty: 237,   lots: 1, avgTime: 0.25    },
@@ -369,6 +402,7 @@
   </script>
 </body>
 </html>
+
 
 
 
