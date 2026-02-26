@@ -1,380 +1,746 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>ProdControl Pro - Compact</title>
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    body { 
-      -webkit-font-smoothing: antialiased; 
-      background-color: #020617;
-      font-family: -apple-system, system-ui, sans-serif;
-      overflow: hidden;
-    }
-    input, select { font-size: 16px !important; } 
-    .ios-blur { backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); }
-    .scroll-container { height: calc(100vh - 140px); overflow-y: auto; }
-    .card-row { border-left: 3px solid transparent; transition: all 0.2s; }
-    .card-row:active { background: #1e293b; }
-    
-    .search-result-item {
-      padding: 12px 14px;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      color: #f8fafc;
-      font-weight: 500;
-      font-size: 13px;
-    }
-    .search-result-item:active {
-      background-color: #4f46e5;
-      color: white;
-    }
-    .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-    .custom-scrollbar::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>World Cup 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f0f0f0;
+    --surface: #ffffff;
+    --surface2: #f7f7f7;
+    --border: #e0e0e0;
+    --text: #111111;
+    --text2: #666666;
+    --accent: #c8102e;
+    --accent2: #004b87;
+    --gold: #d4af37;
+    --green: #1a7a4a;
+    --radius: 16px;
+    --radius-sm: 10px;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+    --nav-height: 72px;
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'DM Sans', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: calc(var(--nav-height) + var(--safe-bottom));
+    overflow-x: hidden;
+  }
+
+  /* Header */
+  .app-header {
+    background: var(--accent);
+    color: white;
+    padding: 16px 20px 12px;
+    padding-top: calc(16px + env(safe-area-inset-top, 0px));
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 16px rgba(200,16,46,0.3);
+  }
+  .header-inner { display: flex; align-items: center; justify-content: space-between; }
+  .app-title { font-family: 'Bebas Neue', serif; font-size: 28px; letter-spacing: 2px; line-height: 1; }
+  .app-subtitle { font-size: 11px; opacity: 0.8; letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+  .trophy { font-size: 24px; }
+
+  /* Tab Views */
+  .tab-view { display: none; padding: 16px; animation: fadeIn 0.2s ease; }
+  .tab-view.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Bottom Nav */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border);
+    display: flex;
+    height: calc(var(--nav-height) + var(--safe-bottom));
+    padding-bottom: var(--safe-bottom);
+    z-index: 200;
+  }
+  .nav-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px 4px;
+    transition: all 0.15s ease;
+    color: var(--text2);
+    font-family: 'DM Sans', sans-serif;
+  }
+  .nav-btn.active { color: var(--accent); }
+  .nav-btn .nav-icon { font-size: 22px; transition: transform 0.15s; }
+  .nav-btn.active .nav-icon { transform: scale(1.1); }
+  .nav-btn .nav-label { font-size: 10px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
+
+  /* Group Cards */
+  .groups-grid { display: flex; flex-direction: column; gap: 16px; }
+  .group-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .group-header {
+    background: var(--accent2);
+    color: white;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .group-name { font-family: 'Bebas Neue', serif; font-size: 22px; letter-spacing: 2px; }
+  .group-status { font-size: 11px; padding: 4px 10px; border-radius: 20px; font-weight: 600; background: rgba(255,255,255,0.2); }
+  .group-status.complete { background: var(--gold); color: #333; }
+
+  .group-body { display: flex; flex-direction: column; }
+
+  /* Standings Table */
+  .standings-section { padding: 12px 16px; }
+  .standings-title { font-size: 10px; font-weight: 700; color: var(--text2); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+  .standings-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .standings-table th { color: var(--text2); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; padding: 4px 6px; text-align: center; }
+  .standings-table th:first-child { text-align: left; }
+  .standings-table td { padding: 7px 6px; text-align: center; border-top: 1px solid var(--border); }
+  .standings-table td:first-child { text-align: left; }
+  .standings-table tr.qualified-1 td { background: rgba(26,122,74,0.08); }
+  .standings-table tr.qualified-2 td { background: rgba(0,75,135,0.06); }
+  .team-name-cell { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100px; }
+
+  /* Editable team name input */
+  .team-name-input {
+    border: none;
+    border-bottom: 1.5px dashed var(--border);
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    width: 100%;
+    padding: 2px 0;
+    outline: none;
+    transition: border-color 0.15s;
+    min-width: 0;
+  }
+  .team-name-input:focus { border-bottom-color: var(--accent2); }
+  .match-team.home .team-name-input { text-align: right; }
+  .match-team.away .team-name-input { text-align: left; }
+  .rank-badge { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; font-size: 11px; font-weight: 700; margin-right: 6px; background: var(--border); color: var(--text2); }
+  .rank-badge.r1 { background: var(--green); color: white; }
+  .rank-badge.r2 { background: var(--accent2); color: white; }
+
+  /* Matches */
+  .matches-section { padding: 0 16px 16px; }
+  .match-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 0;
+    border-top: 1px solid var(--border);
+  }
+  .match-row:first-child { border-top: none; }
+  .match-team { flex: 1; font-size: 13px; font-weight: 500; }
+  .match-team.home { text-align: right; }
+  .match-team.away { text-align: left; }
+  .score-inputs { display: flex; align-items: center; gap: 6px; }
+  .score-input {
+    width: 40px; height: 40px;
+    text-align: center;
+    font-size: 17px;
+    font-weight: 700;
+    font-family: 'DM Mono', monospace;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface2);
+    color: var(--text);
+    -webkit-appearance: none;
+    appearance: none;
+    transition: border-color 0.15s;
+  }
+  .score-input:focus { outline: none; border-color: var(--accent); background: white; }
+  .score-separator { color: var(--text2); font-weight: 700; font-family: 'DM Mono', monospace; }
+
+  /* Knockout Bracket */
+  .bracket-view { overflow-x: auto; }
+  .bracket-stage { margin-bottom: 24px; }
+  .stage-label {
+    font-family: 'Bebas Neue', serif;
+    font-size: 18px;
+    letter-spacing: 2px;
+    color: var(--text2);
+    margin-bottom: 12px;
+    padding-left: 4px;
+    border-left: 4px solid var(--accent);
+    padding-left: 10px;
+  }
+  .bracket-matches { display: flex; flex-direction: column; gap: 10px; }
+  .ko-match {
+    background: var(--surface);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    border-left: 4px solid var(--border);
+    transition: border-color 0.2s;
+  }
+  .ko-match.has-teams { border-left-color: var(--accent2); }
+  .ko-match.complete { border-left-color: var(--gold); }
+  .ko-match-header {
+    background: var(--surface2);
+    padding: 6px 12px;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text2);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .ko-match-body { padding: 8px 12px; display: flex; flex-direction: column; gap: 6px; }
+  .ko-team-row { display: flex; align-items: center; gap: 10px; }
+  .ko-team-name { flex: 1; font-size: 14px; font-weight: 600; color: var(--text); }
+  .ko-team-name.tbd { color: var(--text2); font-weight: 400; font-style: italic; }
+  .ko-score {
+    width: 38px; height: 36px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: 'DM Mono', monospace;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface2);
+    color: var(--text);
+    -webkit-appearance: none;
+    appearance: none;
+    transition: border-color 0.15s;
+  }
+  .ko-score:focus { outline: none; border-color: var(--accent); background: white; }
+  .ko-score:disabled { opacity: 0.4; cursor: not-allowed; }
+  .winner-indicator { width: 6px; height: 6px; border-radius: 50%; background: transparent; }
+  .winner-indicator.won { background: var(--green); }
+
+  /* Champion */
+  .champion-card {
+    background: linear-gradient(135deg, #d4af37, #f0c040, #d4af37);
+    border-radius: var(--radius);
+    padding: 32px 24px;
+    text-align: center;
+    margin-bottom: 16px;
+    box-shadow: 0 8px 32px rgba(212,175,55,0.4);
+  }
+  .champion-trophy { font-size: 56px; margin-bottom: 8px; }
+  .champion-label { font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #7a5a00; margin-bottom: 4px; }
+  .champion-name { font-family: 'Bebas Neue', serif; font-size: 40px; letter-spacing: 3px; color: #3a2a00; }
+  .champion-name.tbd { font-size: 24px; color: rgba(58,42,0,0.4); }
+
+  /* Reset btn */
+  .reset-btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--accent);
+    cursor: pointer;
+    margin-top: 16px;
+  }
+
+  /* Legend */
+  .legend { display: flex; gap: 16px; padding: 0 4px 16px; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text2); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 2px; }
+
+  /* Scrollable columns for R32/R16 */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 500px) { .two-col { grid-template-columns: 1fr; } }
+</style>
 </head>
-<body class="text-slate-300">
-  <div id="root"></div>
+<body>
 
-  <script type="text/babel">
-    const { useState, useMemo, useEffect } = React;
+<header class="app-header">
+  <div class="header-inner">
+    <div>
+      <div class="app-title">World Cup 2026</div>
+      <div class="app-subtitle">USA · Canada · Mexico</div>
+    </div>
+    <div class="trophy">🏆</div>
+  </div>
+</header>
 
-    const INITIAL_MASTER_DATA = [
-    { name: 'Akabane133-24432-GB2',                 qty: 20500, lots: 1, avgTime: 0.003   },
-    { name: 'Akabane-24432-028-6802(88)',        qty: 25600, lots: 1, avgTime: 0.00273 }, 
-    { name: 'Akabane66-24432-028-3002',          qty: 1930,  lots: 1, avgTime: 0.011   },
-    { name: 'Akabane-2252-822-6104',             qty:60000,  lots: 1, avgTime: 0.005   }, 
-    { name: 'Akabane-24432-115-3001',            qty:20800,  lots: 1, avgTime: 0.00433   }, 
-    { name: 'AKIYAMA-ビボット4*12',               qty:128,   lots: 1, avgTime: 0.234   },  
-    { name: 'BOHSE 450',                         qty: 30,    lots: 5, avgTime: 3.4     },
-    { name: 'BOHSE',                             qty: 80,    lots: 1, avgTime: 3.1     },
-    { name: 'FUZISERA',                          qty: 20,    lots: 3, avgTime: 4.0     },
-    { name: 'FUZISERA PPEA57JA',                 qty: 40000,   lots: 3, avgTime: 0.004875 },
-    { name: 'FUZISAKI Bolt',                     qty: 191,   lots: 1, avgTime: 0.263 }, 
-    { name: 'GOTOU-六穴段B19M10',                 qty: 670,    lots: 1, avgTime: 0.23 },
-    { name: 'GOTOU-66-B8M8F1',                    qty: 875,    lots: 1, avgTime: 0.31 },
-    { name: 'GOTOU-66-B14M10',                   qty: 550,    lots: 1, avgTime: 0.318 },
-    { name: 'GOTOU-66-B/T',                      qty: 446,    lots: 1, avgTime: 0.347 },
-    { name: 'GOTOU-66-B848',                     qty: 277,    lots: 1, avgTime: 0.288 },
-    { name: 'GOTOU-66-B8M8F',                    qty: 750,    lots: 1, avgTime: 0.32 },
-    { name: 'GOTOU-RP10連続ピン',                 qty: 250,    lots: 1, avgTime: 0.24   },
-    { name: 'HOKUTO-ビットw3/8l20',               qty: 480,     lots: 1, avgTime: 0.25   },    
-    { name: 'KOMA',                              qty: 8,     lots: 2, avgTime: 4.5      },
-    { name: 'KOBAYU',                            qty: 20000,    lots: 1, avgTime: 0.003 },
-    { name: 'KOYAUCHI',                          qty: 237,   lots: 1, avgTime: 0.25    },
-    { name: 'Katsumika',                         qty: 400,   lots: 1, avgTime: 0.25    },
-    { name: 'Khamida',                           qty: 4500,  lots: 3, avgTime: 0.1     },
-    { name: 'Maeda-MD000425',                    qty: 41000,  lots: 1, avgTime: 0.00402   },
-    { name: 'MAEDA-NH 625101',                   qty: 144000,  lots: 1, avgTime: 0.000833 },
-    { name: 'MAEDA-45',                          qty: 180000,lots: 1, avgTime: 0.00133 },
-    { name: 'MAEDA 8941712890(😮)',             qty: 6400, lots: 1, avgTime: 0.028    },
-    { name: 'MAEDA-11058H100A',        	      	 qty: 40000, lots: 1, avgTime: 0.0117  }, 
-    { name: 'NDN 77-45',             		 qty: 340,   lots: 1, avgTime: 0.29    },
-    { name: 'NDN BTP 3*4(177)',       		 qty: 140,   lots: 1, avgTime: 0.25    },
-    { name: 'NDN トラス4*7(177)',      		 qty: 144,   lots: 1, avgTime: 0.243    },
-    { name: 'NDN blue',             		 qty: 82,    lots: 1, avgTime: 0.25    },
-    { name: 'NDN45',                 		 qty: 150,   lots: 1, avgTime: 0.27    },
-    { name: 'Oota-H22151クレプ',      		 qty: 160,   lots: 1, avgTime: 0.3125    }, 
-    { name: 'SHINWA-10',            		 qty: 10,    lots: 1, avgTime: 4       },
-    { name: 'SHINWA-36',             		 qty: 18,    lots: 1, avgTime: 3.8     },
-    { name: 'SHINWA-6',              		 qty: 18,    lots: 3, avgTime: 5       },
-    { name: 'Sugawara SOP10T42*25*55',		 qty: 2392,  lots: 1, avgTime: 0.02508 },
-    { name: 'Takao',                   		 qty: 2445,  lots: 1, avgTime: 0.040   },
-    { name: 'Teppei PIN',             		 qty: 290,   lots: 1, avgTime: 0.28    },
-    { name: 'Rasen pin 8*43',         		 qty: 580,    lots: 1, avgTime: 0.246  },
-    { name: 'Tousho Gearplate',       		 qty: 4127,  lots: 1, avgTime: 0.06    },
-    { name: 'Toyo PN-2512-10',         		 qty: 460,   lots: 2, avgTime: 0.282   },
-    { name: 'Toushou-UA296A/Bロックプレート',  	 qty: 25015,  lots: 1, avgTime: 0.00579    }, 
-    { name: 'YAMASHITA',              		 qty: 50,    lots: 1, avgTime: 4.8     },
-    { name: 'Yamasita Pc ネジ4*12',    		 qty: 680,    lots: 1, avgTime: 0.2647     }, 
-    { name: 'TOYAMA-ナカオルP57)',       		 qty: 220,   lots: 1, avgTime: 0.318    },
-    { name: 'YASATO-6271',            		 qty: 270,   lots: 2, avgTime: 0.24    },
-    { name: 'YASATO	109530-0091', 		 qty: 108,   lots: 1, avgTime: 0.231   }, 
-    { name: 'YASATO-4010',             		 qty: 130,   lots: 2, avgTime: 0.324    },
-    { name: 'YASATO	2940',           	 qty: 168,   lots: 1, avgTime: 0.3   }, 
-    { name: 'Yamamoto',              		 qty: 50,    lots: 1, avgTime: 3.9     },
-    { name: 'Yoshida',                		 qty: 195,   lots: 1, avgTime: 0.31    },
-    { name: 'Yoshigawa',                	 qty: 100,   lots: 1, avgTime: 0.95    },   
-    { name: 'Yuu-85-K1071P',          		 qty: 30000,    lots: 1, avgTime: 0.00714 },
-    { name: 'Yuu small',              		 qty: 10,    lots: 1, avgTime: 3.5     },
+<div id="view-groups" class="tab-view active">
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Advances as 1st</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--accent2)"></div>Advances as 2nd</div>
+  </div>
+  <div class="groups-grid" id="groups-container"></div>
+</div>
+
+<div id="view-r32" class="tab-view">
+  <div class="bracket-stage">
+    <div class="stage-label">Round of 32</div>
+    <div class="bracket-matches two-col" id="r32-container"></div>
+  </div>
+  <div class="bracket-stage">
+    <div class="stage-label">Round of 16</div>
+    <div class="bracket-matches two-col" id="r16-container"></div>
+  </div>
+</div>
+
+<div id="view-qf" class="tab-view">
+  <div class="bracket-stage">
+    <div class="stage-label">Quarter-Finals</div>
+    <div class="bracket-matches" id="qf-container"></div>
+  </div>
+  <div class="bracket-stage">
+    <div class="stage-label">Semi-Finals</div>
+    <div class="bracket-matches" id="sf-container"></div>
+  </div>
+  <div class="bracket-stage">
+    <div class="stage-label">Final</div>
+    <div class="bracket-matches" id="final-container"></div>
+  </div>
+  <div id="champion-section"></div>
+</div>
+
+<nav class="bottom-nav">
+  <button class="nav-btn active" onclick="switchTab('groups', this)">
+    <span class="nav-icon">🏟️</span>
+    <span class="nav-label">Groups</span>
+  </button>
+  <button class="nav-btn" onclick="switchTab('r32', this)">
+    <span class="nav-icon">⚔️</span>
+    <span class="nav-label">R32 / R16</span>
+  </button>
+  <button class="nav-btn" onclick="switchTab('qf', this)">
+    <span class="nav-icon">🥇</span>
+    <span class="nav-label">QF → Final</span>
+  </button>
+</nav>
+
+<script>
+// ============ DATA ============
+const GROUPS = {
+  A: ['Mexico', ' South Africa', 'South Korea', 'TBA'],
+  B: ['Canada', 'TBA', 'Qatar', 'Switzerland'],
+  C: ['Brazil', 'Morocco', ' Haiti', 'Scotland'],
+  D: ['USA', 'Paraguay', 'Australia', 'TBA'],
+  E: ['Germany', 'Curaçao', 'Ivory Coast', 'Ecuador'],
+  F: ['Netherlands', 'Japan', 'TBA', 'Tunisia'],
+  G: ['Belgium', 'Egypt', ' Iran', 'New Zealand'],
+  H: ['Spain', 'Cape Verde', 'Saudi Arabia', 'Uruguay'],
+  I: ['France', 'Senegal', 'TBA', 'Norway'],
+  J: ['Argentina', 'Algeria', 'Austria', 'Jordan'],
+  K: ['Portugal', 'TBA', 'Uzbekistan', 'Colombia'],
+  L: ['England', 'Croatia', 'Ghana', 'Panama'],
+};
+
+// R32 bracket: [Group1Winner, Group2Runner, matchIndex]
+// Based on typical expanded WC format pairings
+const R32_PAIRINGS = [
+  ['A','1','B','2'], ['C','1','D','2'],
+  ['E','1','F','2'], ['G','1','H','2'],
+  ['I','1','J','2'], ['K','1','L','2'],
+  ['B','1','A','2'], ['D','1','C','2'],
+  ['F','1','E','2'], ['H','1','G','2'],
+  ['J','1','I','2'], ['L','1','K','2'],
+  ['A','1','C','2'], ['E','1','G','2'],  // These TBD positions for 16 teams
+  ['B','1','D','2'], ['F','1','H','2'],
+];
+
+// Knockout state
+let state = {
+  groups: {},    // { A: { matches: [{h,a,hs,as},...], standings: [{...}] } }
+  r32: Array(16).fill(null).map(() => ({t1:'',t2:'',s1:'',s2:'',winner:''})),
+  r16: Array(8).fill(null).map(() => ({t1:'',t2:'',s1:'',s2:'',winner:''})),
+  qf: Array(4).fill(null).map(() => ({t1:'',t2:'',s1:'',s2:'',winner:''})),
+  sf: Array(2).fill(null).map(() => ({t1:'',t2:'',s1:'',s2:'',winner:''})),
+  final: [{t1:'',t2:'',s1:'',s2:'',winner:''}],
+};
+
+// Load from localStorage
+function loadState() {
+  try {
+    const s = localStorage.getItem('wc2026');
+    if (s) {
+      state = JSON.parse(s);
+      // Rebuild GROUPS from match data so renamed teams are restored
+      Object.keys(GROUPS).forEach(k => {
+        if (state.groups[k]?.matches?.length) {
+          const names = [...new Set(state.groups[k].matches.flatMap(m => [m.h, m.a]))];
+          if (names.length === 4) GROUPS[k] = names;
+        }
+      });
+    }
+  } catch(e) {}
+}
+function saveState() {
+  try { localStorage.setItem('wc2026', JSON.stringify(state)); } catch(e) {}
+}
+
+// ============ GROUPS ============
+function getGroupMatches(teams) {
+  const matches = [];
+  for (let i = 0; i < teams.length; i++)
+    for (let j = i+1; j < teams.length; j++)
+      matches.push({h: teams[i], a: teams[j], hs: '', as: ''});
+  return matches;
+}
+
+function calcStandings(teams, matches) {
+  // Always derive actual team names from matches (handles renames)
+  const allTeams = [...new Set(matches.flatMap(m => [m.h, m.a]))];
+  const useTeams = allTeams.length ? allTeams : teams;
+  const table = {};
+  useTeams.forEach(t => table[t] = {team:t, p:0, w:0, d:0, l:0, gf:0, ga:0, gd:0, pts:0});
+  matches.forEach(m => {
+    if (m.hs === '' || m.as === '') return;
+    const hs = parseInt(m.hs), as = parseInt(m.as);
+    if (isNaN(hs) || isNaN(as)) return;
+    table[m.h].p++; table[m.a].p++;
+    table[m.h].gf += hs; table[m.h].ga += as;
+    table[m.a].gf += as; table[m.a].ga += hs;
+    table[m.h].gd = table[m.h].gf - table[m.h].ga;
+    table[m.a].gd = table[m.a].gf - table[m.a].ga;
+    if (hs > as) { table[m.h].w++; table[m.h].pts += 3; table[m.a].l++; }
+    else if (as > hs) { table[m.a].w++; table[m.a].pts += 3; table[m.h].l++; }
+    else { table[m.h].d++; table[m.h].pts++; table[m.a].d++; table[m.a].pts++; }
+  });
+  return Object.values(table).sort((a,b) => b.pts - a.pts || b.gd - a.gd || b.gf - a.gf || a.team.localeCompare(b.team));
+}
+
+function isGroupComplete(matches) {
+  const total = matches.length;
+  return matches.filter(m => m.hs !== '' && m.as !== '' && !isNaN(parseInt(m.hs)) && !isNaN(parseInt(m.as))).length === total;
+}
+
+function buildGroupCard(groupKey) {
+  const teams = GROUPS[groupKey];
+  if (!state.groups[groupKey]) {
+    state.groups[groupKey] = { matches: getGroupMatches(teams) };
+  }
+  const g = state.groups[groupKey];
+  const standings = calcStandings(teams, g.matches);
+  const complete = isGroupComplete(g.matches);
+
+  const card = document.createElement('div');
+  card.className = 'group-card';
+  card.id = `group-${groupKey}`;
+
+  // Header
+  card.innerHTML = `
+    <div class="group-header">
+      <div class="group-name">Group ${groupKey}</div>
+      <div class="group-status ${complete ? 'complete' : ''}">${complete ? '✓ Complete' : `${g.matches.filter(m=>m.hs!==''&&m.as!==''&&!isNaN(parseInt(m.hs))).length}/${g.matches.length} played`}</div>
+    </div>
+    <div class="group-body">
+      <div class="standings-section">
+        <div class="standings-title">Standings</div>
+        <table class="standings-table">
+          <thead><tr>
+            <th style="width:50%">Team</th>
+            <th>P</th><th>W</th><th>D</th><th>L</th><th>GD</th><th>Pts</th>
+          </tr></thead>
+          <tbody>
+            ${standings.map((s,i) => `
+              <tr class="${i===0?'qualified-1':i===1?'qualified-2':''}">
+                <td><span class="rank-badge ${i===0?'r1':i===1?'r2':''}">${i+1}</span><span class="team-name-cell">${s.team}</span></td>
+                <td>${s.p}</td><td>${s.w}</td><td>${s.d}</td><td>${s.l}</td>
+                <td style="font-family:'DM Mono',monospace">${s.gd>0?'+':''}${s.gd}</td>
+                <td><strong>${s.pts}</strong></td>
+              </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+      <div class="matches-section">
+        ${g.matches.map((m,mi) => `
+          <div class="match-row">
+            <div class="match-team home">
+              <input class="team-name-input" type="text" value="${m.h}"
+                placeholder="Team"
+                onchange="onTeamNameChange('${groupKey}',${mi},'h',this.value)"
+                onblur="onTeamNameChange('${groupKey}',${mi},'h',this.value)">
+            </div>
+            <div class="score-inputs">
+              <input class="score-input" type="number" inputmode="numeric" min="0" max="99"
+                value="${m.hs}" placeholder="-"
+                onchange="onScoreChange('${groupKey}',${mi},'h',this.value)"
+                oninput="onScoreChange('${groupKey}',${mi},'h',this.value)">
+              <span class="score-separator">:</span>
+              <input class="score-input" type="number" inputmode="numeric" min="0" max="99"
+                value="${m.as}" placeholder="-"
+                onchange="onScoreChange('${groupKey}',${mi},'a',this.value)"
+                oninput="onScoreChange('${groupKey}',${mi},'a',this.value)">
+            </div>
+            <div class="match-team away">
+              <input class="team-name-input" type="text" value="${m.a}"
+                placeholder="Team"
+                onchange="onTeamNameChange('${groupKey}',${mi},'a',this.value)"
+                onblur="onTeamNameChange('${groupKey}',${mi},'a',this.value)">
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+
+  return card;
+}
+
+function renderGroups() {
+  const container = document.getElementById('groups-container');
+  container.innerHTML = '';
+  Object.keys(GROUPS).forEach(k => container.appendChild(buildGroupCard(k)));
+}
+
+function refreshGroupCard(groupKey) {
+  const old = document.getElementById(`group-${groupKey}`);
+  if (old) old.replaceWith(buildGroupCard(groupKey));
+}
+
+function onTeamNameChange(groupKey, matchIdx, side, val) {
+  const g = state.groups[groupKey];
+  const match = g.matches[matchIdx];
+  const oldName = side === 'h' ? match.h : match.a;
+  const newName = val.trim() || oldName;
+  if (newName === oldName) return;
+
+  // Update all match references in this group
+  g.matches.forEach(m => {
+    if (m.h === oldName) m.h = newName;
+    if (m.a === oldName) m.a = newName;
+  });
+
+  // Update GROUPS constant so standings and knockout propagation stays in sync
+  const idx = GROUPS[groupKey].indexOf(oldName);
+  if (idx !== -1) GROUPS[groupKey][idx] = newName;
+
+  saveState();
+  refreshGroupCard(groupKey);
+  propagateKnockout();
+}
+
+function onScoreChange(groupKey, matchIdx, side, val) {
+  state.groups[groupKey].matches[matchIdx][side === 'h' ? 'hs' : 'as'] = val;
+  saveState();
+  refreshGroupCard(groupKey);
+  propagateKnockout();
+}
+
+// ============ KNOCKOUT PROPAGATION ============
+function getGroupWinner(groupKey, rank) {
+  if (!state.groups[groupKey]) return '';
+  const { matches } = state.groups[groupKey];
+  const teams = GROUPS[groupKey];
+  const standings = calcStandings(teams, matches);
+  if (!isGroupComplete(matches)) return '';
+  return standings[rank - 1]?.team || '';
+}
+
+function propagateKnockout() {
+  // R32: fill from groups
+  const r32Slots = [
+    ['A',1,'B',2], ['C',1,'D',2], ['E',1,'F',2], ['G',1,'H',2],
+    ['I',1,'J',2], ['K',1,'L',2],
+    ['B',1,'A',2], ['D',1,'C',2], ['F',1,'E',2], ['H',1,'G',2],
+    ['J',1,'I',2], ['L',1,'K',2],
+    ['A',1,'C',2], ['E',1,'G',2],
+    ['B',1,'D',2], ['F',1,'H',2],
+  ];
+  r32Slots.forEach(([g1,r1,g2,r2], i) => {
+    const t1 = getGroupWinner(g1, r1);
+    const t2 = getGroupWinner(g2, r2);
+    const m = state.r32[i];
+    // preserve scores if teams unchanged
+    if (m.t1 !== t1 || m.t2 !== t2) {
+      m.s1 = ''; m.s2 = ''; m.winner = '';
+    }
+    m.t1 = t1; m.t2 = t2;
+    // recompute winner if scores exist
+    m.winner = computeKOWinner(m);
+  });
+
+  // R16 from R32
+  for (let i = 0; i < 8; i++) {
+    const m1 = state.r32[i*2], m2 = state.r32[i*2+1];
+    const t1 = m1.winner, t2 = m2.winner;
+    const m = state.r16[i];
+    if (m.t1 !== t1 || m.t2 !== t2) { m.s1=''; m.s2=''; m.winner=''; }
+    m.t1 = t1; m.t2 = t2;
+    m.winner = computeKOWinner(m);
+  }
+
+  // QF from R16
+  for (let i = 0; i < 4; i++) {
+    const m1 = state.r16[i*2], m2 = state.r16[i*2+1];
+    const t1 = m1.winner, t2 = m2.winner;
+    const m = state.qf[i];
+    if (m.t1 !== t1 || m.t2 !== t2) { m.s1=''; m.s2=''; m.winner=''; }
+    m.t1 = t1; m.t2 = t2;
+    m.winner = computeKOWinner(m);
+  }
+
+  // SF from QF
+  for (let i = 0; i < 2; i++) {
+    const m1 = state.qf[i*2], m2 = state.qf[i*2+1];
+    const t1 = m1.winner, t2 = m2.winner;
+    const m = state.sf[i];
+    if (m.t1 !== t1 || m.t2 !== t2) { m.s1=''; m.s2=''; m.winner=''; }
+    m.t1 = t1; m.t2 = t2;
+    m.winner = computeKOWinner(m);
+  }
+
+  // Final from SF
+  {
+    const t1 = state.sf[0].winner, t2 = state.sf[1].winner;
+    const m = state.final[0];
+    if (m.t1 !== t1 || m.t2 !== t2) { m.s1=''; m.s2=''; m.winner=''; }
+    m.t1 = t1; m.t2 = t2;
+    m.winner = computeKOWinner(m);
+  }
+
+  saveState();
+  renderKnockout();
+}
+
+function computeKOWinner(m) {
+  if (!m.t1 || !m.t2) return '';
+  if (m.s1 === '' || m.s2 === '') return '';
+  const s1 = parseInt(m.s1), s2 = parseInt(m.s2);
+  if (isNaN(s1) || isNaN(s2)) return '';
+  if (s1 > s2) return m.t1;
+  if (s2 > s1) return m.t2;
+  return ''; // draw = no winner (handle with penalty later)
+}
+
+// ============ RENDER KNOCKOUT ============
+function renderKOMatch(m, stageKey, idx, label) {
+  const hasBoth = m.t1 && m.t2;
+  const isComplete = !!m.winner;
+  const s1won = m.winner === m.t1;
+  const s2won = m.winner === m.t2;
+
+  return `<div class="ko-match ${hasBoth?'has-teams':''} ${isComplete?'complete':''}">
+    <div class="ko-match-header">${label}</div>
+    <div class="ko-match-body">
+      <div class="ko-team-row">
+        <span class="winner-indicator ${s1won?'won':''}"></span>
+        <span class="ko-team-name ${!m.t1?'tbd':''}">${m.t1 || 'TBD'}</span>
+        <input class="ko-score" type="number" inputmode="numeric" min="0" max="99"
+          value="${m.s1}" placeholder="-"
+          ${!hasBoth?'disabled':''}
+          oninput="onKOScore('${stageKey}',${idx},'s1',this.value)">
+      </div>
+      <div class="ko-team-row">
+        <span class="winner-indicator ${s2won?'won':''}"></span>
+        <span class="ko-team-name ${!m.t2?'tbd':''}">${m.t2 || 'TBD'}</span>
+        <input class="ko-score" type="number" inputmode="numeric" min="0" max="99"
+          value="${m.s2}" placeholder="-"
+          ${!hasBoth?'disabled':''}
+          oninput="onKOScore('${stageKey}',${idx},'s2',this.value)">
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderKnockout() {
+  const matchNames = {
+    r32: ['M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11','M12','M13','M14','M15','M16'],
+    r16: ['R16-1','R16-2','R16-3','R16-4','R16-5','R16-6','R16-7','R16-8'],
+    qf: ['QF1','QF2','QF3','QF4'],
+    sf: ['Semi-Final 1','Semi-Final 2'],
+    final: ['THE FINAL'],
+  };
+
+  document.getElementById('r32-container').innerHTML =
+    state.r32.map((m,i) => renderKOMatch(m,'r32',i,matchNames.r32[i])).join('');
+  document.getElementById('r16-container').innerHTML =
+    state.r16.map((m,i) => renderKOMatch(m,'r16',i,matchNames.r16[i])).join('');
+  document.getElementById('qf-container').innerHTML =
+    state.qf.map((m,i) => renderKOMatch(m,'qf',i,matchNames.qf[i])).join('');
+  document.getElementById('sf-container').innerHTML =
+    state.sf.map((m,i) => renderKOMatch(m,'sf',i,matchNames.sf[i])).join('');
+  document.getElementById('final-container').innerHTML =
+    renderKOMatch(state.final[0],'final',0,matchNames.final[0]);
+
+  const champion = state.final[0].winner;
+  document.getElementById('champion-section').innerHTML = `
+    <div class="champion-card">
+      <div class="champion-trophy">🏆</div>
+      <div class="champion-label">World Champion 2026</div>
+      <div class="champion-name ${!champion?'tbd':''}">${champion || 'TBD'}</div>
+    </div>`;
+}
+
+function onKOScore(stageKey, idx, field, val) {
+  state[stageKey][idx][field] = val;
+  // recompute winner
+  const m = state[stageKey][idx];
+  m.winner = computeKOWinner(m);
+  saveState();
+  propagateKnockoutFrom(stageKey);
+}
+
+function propagateKnockoutFrom(stageKey) {
+  // Full re-propagate is fine since it's fast
+  // But we need to preserve group-level results
+  // Re-run only from the changed stage onward
+  const order = ['r32','r16','qf','sf','final'];
+  const startIdx = order.indexOf(stageKey);
+
+  const stages = [
+    { key:'r16', src:'r32', count:8 },
+    { key:'qf', src:'r16', count:4 },
+    { key:'sf', src:'qf', count:2 },
+    { key:'final', src:'sf', count:1 },
   ];
 
-    const formatTime = (mins) => {
-      const h = Math.floor((mins % 1440 + 1440) % 1440 / 60);
-      const m = Math.floor(mins % 60);
-      return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
-    };
-
-    const formatDuration = (mins) => {
-      const h = Math.floor(mins / 60);
-      const m = Math.round(mins % 60);
-      if (h > 0) return `${h}h ${m}m`;
-      return `${m}m`;
-    };
-
-    function App() {
-      const [schedule, setSchedule] = useState([]);
-      const [masterList, setMasterList] = useState(INITIAL_MASTER_DATA);
-      const [startTime, setStartTime] = useState('08:00');
-      const [searchTerm, setSearchTerm] = useState('');
-      const [isSaving, setIsSaving] = useState(false);
-      const [showSettings, setShowSettings] = useState(false);
-
-      const [newProduct, setNewProduct] = useState({ name: '', qty: 0, lots: 1, avgTime: 0 });
-
-      useEffect(() => {
-        const saved = localStorage.getItem('pc_compact_v5');
-        if (saved) {
-          const d = JSON.parse(saved);
-          setSchedule(d.schedule || []);
-          setStartTime(d.startTime || '08:00');
-          if (d.customMaster) {
-            setMasterList([...INITIAL_MASTER_DATA, ...d.customMaster]);
-          }
-        } else {
-          const p = INITIAL_MASTER_DATA[0];
-          setSchedule([{ id: Date.now(), productName: p.name, qty: p.qty, lots: p.lots, gap: 60 }]);
-        }
-      }, []);
-
-      const calculated = useMemo(() => {
-        let current = (Number(startTime.split(':')[0]) * 60) + Number(startTime.split(':')[1]);
-        return schedule.map(item => {
-          const meta = masterList.find(p => p.name === item.productName) || masterList[0];
-          const duration = Math.round(((item.qty * meta.avgTime) + ((item.lots - 1) * 10)) / 5) * 5;
-          const start = current;
-          const end = start + duration;
-          current = end + (item.gap || 0);
-          return { ...item, start: formatTime(start), end: formatTime(end), duration };
-        });
-      }, [schedule, startTime, masterList]);
-
-      const save = () => {
-        setIsSaving(true);
-        const customItems = masterList.filter(m => !INITIAL_MASTER_DATA.some(i => i.name === m.name));
-        localStorage.setItem('pc_compact_v5', JSON.stringify({ 
-          schedule, 
-          startTime,
-          customMaster: customItems 
-        }));
-        setTimeout(() => setIsSaving(false), 500);
-      };
-
-      const addProductToSchedule = (pName) => {
-        const p = masterList.find(x => x.name === pName);
-        setSchedule([...schedule, { id: Date.now(), productName: p.name, qty: p.qty, lots: p.lots, gap: 60 }]);
-        setSearchTerm('');
-      };
-
-      const handleAddMasterProduct = () => {
-        if (!newProduct.name || masterList.some(p => p.name === newProduct.name)) return;
-        setMasterList([...masterList, newProduct]);
-        setNewProduct({ name: '', qty: 0, lots: 1, avgTime: 0 });
-      };
-
-      const deleteMasterProduct = (name) => {
-        if (INITIAL_MASTER_DATA.some(p => p.name === name)) return;
-        setMasterList(masterList.filter(p => p.name !== name));
-      };
-
-      const handleProductChange = (id, newName) => {
-        const p = masterList.find(x => x.name === newName);
-        setSchedule(schedule.map(s => s.id === id ? {
-          ...s, 
-          productName: newName, 
-          qty: p.qty, 
-          lots: p.lots 
-        } : s));
-      };
-
-      const range = (start, stop, step = 1) => Array.from({ length: (stop - start) / step + 1 }, (_, i) => start + (i * step));
-
-      return (
-        <div className="flex flex-col h-screen max-w-md mx-auto bg-black relative">
-          
-          <header className="pt-10 pb-2 px-3 bg-slate-900/80 ios-blur border-b border-white/5 relative z-[100]">
-            <div className="flex items-center gap-2">
-              <input 
-                type="time" 
-                value={startTime} 
-                onChange={e => setStartTime(e.target.value)}
-                className="bg-indigo-600 text-white font-bold px-2 py-1 rounded text-xs w-20 outline-none"
-              />
-              <div className="relative flex-grow">
-                <input 
-                  className="w-full bg-white/10 border border-white/10 rounded-md py-1 px-3 text-xs text-white placeholder-slate-400 focus:bg-white/20 focus:ring-1 focus:ring-indigo-500 outline-none"
-                  placeholder="Quick Add Search..."
-                  value={searchTerm}
-                  onChange={e => setSearchTerm(e.target.value)}
-                />
-                {searchTerm && (
-                  <div className="absolute top-full left-0 right-0 mt-2 bg-slate-900 rounded-lg shadow-[0_10px_40px_rgba(0,0,0,0.8)] border border-white/20 max-h-60 overflow-y-auto overflow-x-hidden">
-                    {masterList.filter(f => f.name.toLowerCase().includes(searchTerm.toLowerCase())).map(p => (
-                      <div 
-                        key={p.name} 
-                        onClick={() => addProductToSchedule(p.name)} 
-                        className="search-result-item truncate"
-                      >
-                        {p.name}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-              <button onClick={() => setShowSettings(!showSettings)} className="p-1.5 bg-slate-800 rounded-md border border-white/10 text-slate-300">
-                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-              </button>
-              <button onClick={save} className={`text-[10px] font-bold px-3 py-1.5 rounded transition-colors ${isSaving ? 'bg-emerald-500 text-white' : 'bg-white text-black'}`}>
-                {isSaving ? '✓' : 'SAVE'}
-              </button>
-            </div>
-          </header>
-
-          <main className="scroll-container p-2 space-y-1.5 custom-scrollbar pb-32">
-            {calculated.map((item, idx) => (
-              <div key={item.id} className="card-row bg-slate-900/50 border border-white/5 rounded-lg p-2 relative">
-                <div className={`absolute left-0 top-0 bottom-0 w-1 rounded-l-lg ${idx % 2 === 0 ? 'bg-indigo-500' : 'bg-cyan-500'}`}></div>
-                
-                <div className="flex justify-between items-start mb-1 pl-1">
-                  <select 
-                    value={item.productName}
-                    onChange={e => handleProductChange(item.id, e.target.value)}
-                    className="bg-transparent text-[13px] font-bold text-white w-2/3 truncate outline-none"
-                  >
-                    {masterList.map(p => <option key={p.name} value={p.name} className="bg-slate-900">{p.name}</option>)}
-                  </select>
-                  <div className="flex flex-col items-end">
-                    <div className="flex items-center gap-1 text-[13px] font-black">
-                      <span className="text-emerald-400">{item.start}</span>
-                      <span className="text-white/20">-</span>
-                      <span className="text-orange-400">{item.end}</span>
-                    </div>
-                    <div className="text-[10px] font-bold text-slate-500">
-                      {formatDuration(item.duration)}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-2 pl-1">
-                  <div className="flex items-center bg-white/5 rounded px-2 py-0.5 border border-white/5 flex-grow max-w-[120px]">
-                    <span className="text-[8px] font-bold text-slate-500 mr-2 uppercase">Qty</span>
-                    <input 
-                      type="number" 
-                      value={item.qty} 
-                      onChange={e => setSchedule(schedule.map(s => s.id === item.id ? {...s, qty: parseInt(e.target.value)||0} : s))}
-                      className="bg-transparent text-[11px] font-bold text-white w-full outline-none"
-                    />
-                  </div>
-                  
-                  <div className="flex items-center bg-white/5 rounded px-2 py-0.5 border border-white/5 min-w-[55px]">
-                    <span className="text-[8px] font-bold text-slate-500 mr-2 uppercase">Lots</span>
-                    <select 
-                      value={item.lots} 
-                      onChange={e => setSchedule(schedule.map(s => s.id === item.id ? {...s, lots: parseInt(e.target.value)} : s))}
-                      className="bg-transparent text-[11px] font-bold text-white outline-none"
-                    >
-                      {range(1, 15).map(n => <option key={n} value={n} className="bg-slate-900">{n}</option>)}
-                    </select>
-                  </div>
-
-                  <div className="flex items-center bg-white/5 rounded px-2 py-0.5 border border-white/5 min-w-[65px]">
-                    <span className="text-[8px] font-bold text-slate-500 mr-2 uppercase">Gap</span>
-                    <select 
-                      value={item.gap} 
-                      onChange={e => setSchedule(schedule.map(s => s.id === item.id ? {...s, gap: parseInt(e.target.value)} : s))}
-                      className="bg-transparent text-[11px] font-bold text-white outline-none"
-                    >
-                      {range(10, 150, 10).map(m => <option key={m} value={m} className="bg-slate-900">{m}m</option>)}
-                    </select>
-                  </div>
-                  <button onClick={() => setSchedule(schedule.filter(s => s.id !== item.id))} className="ml-auto text-slate-600 active:text-red-400 text-[14px] p-1 px-2">✕</button>
-                </div>
-              </div>
-            ))}
-          </main>
-
-          {showSettings && (
-            <div className="absolute inset-0 z-[200] bg-black/90 ios-blur flex flex-col p-4 animate-in fade-in slide-in-from-bottom-4 duration-200">
-              <div className="flex justify-between items-center mb-6 pt-6">
-                <h2 className="text-xl font-black text-white">Master Data Settings</h2>
-                <button onClick={() => setShowSettings(false)} className="bg-white/10 p-2 rounded-full text-white">✕</button>
-              </div>
-
-              <div className="bg-slate-900 rounded-xl p-4 border border-white/10 mb-6">
-                <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Add New Product</h3>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="col-span-2">
-                    <label className="text-[10px] text-slate-500 block mb-1">Product Name</label>
-                    <input className="w-full bg-black border border-white/10 rounded px-3 py-2 text-sm text-white outline-none focus:border-indigo-500" value={newProduct.name} onChange={e => setNewProduct({...newProduct, name: e.target.value})} placeholder="e.g. Parts-99" />
-                  </div>
-                  <div>
-                    <label className="text-[10px] text-slate-500 block mb-1">Standard Qty</label>
-                    <input type="number" className="w-full bg-black border border-white/10 rounded px-3 py-2 text-sm text-white outline-none" value={newProduct.qty} onChange={e => setNewProduct({...newProduct, qty: parseInt(e.target.value)||0})} />
-                  </div>
-                  <div>
-                    <label className="text-[10px] text-slate-500 block mb-1">Lots</label>
-                    <input type="number" className="w-full bg-black border border-white/10 rounded px-3 py-2 text-sm text-white outline-none" value={newProduct.lots} onChange={e => setNewProduct({...newProduct, lots: parseInt(e.target.value)||1})} />
-                  </div>
-                  <div className="col-span-2">
-                    <label className="text-[10px] text-slate-500 block mb-1">Avg Time (Mins per Unit)</label>
-                    <input type="number" step="0.0001" className="w-full bg-black border border-white/10 rounded px-3 py-2 text-sm text-white outline-none" value={newProduct.avgTime} onChange={e => setNewProduct({...newProduct, avgTime: parseFloat(e.target.value)||0})} />
-                  </div>
-                  <button onClick={handleAddMasterProduct} className="col-span-2 bg-indigo-600 text-white font-bold py-3 rounded-lg mt-2 active:scale-95 transition-transform">ADD TO MASTER LIST</button>
-                </div>
-              </div>
-
-              <div className="flex-grow overflow-y-auto custom-scrollbar">
-                <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Current Master Data</h3>
-                {masterList.map((p, i) => (
-                  <div key={i} className="flex items-center justify-between p-3 border-b border-white/5">
-                    <div className="truncate pr-4">
-                      <p className="text-sm font-bold text-white truncate">{p.name}</p>
-                      <p className="text-[10px] text-slate-500">Qty: {p.qty} | Lots: {p.lots} | T: {p.avgTime}</p>
-                    </div>
-                    {!INITIAL_MASTER_DATA.some(orig => orig.name === p.name) && (
-                      <button onClick={() => deleteMasterProduct(p.name)} className="text-red-500 text-xs font-bold p-2">DELETE</button>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          <div className="fixed bottom-6 left-4 right-4 max-w-md mx-auto z-50">
-            <div className="flex justify-between items-end mb-4">
-              <div className="bg-indigo-600/90 text-white px-4 py-2 rounded-2xl shadow-2xl ios-blur border border-white/20">
-                <p className="text-[8px] font-black uppercase tracking-widest opacity-70">Shift Finish</p>
-                <p className="text-xl font-black">{calculated.length ? calculated[calculated.length-1].end : '--:--'}</p>
-              </div>
-              
-              <button 
-                onClick={() => addProductToSchedule(masterList[0].name)}
-                className="w-14 h-14 bg-white text-black rounded-full shadow-2xl flex items-center justify-center text-3xl font-light active:scale-90 transition-transform"
-              >
-                +
-              </button>
-            </div>
-
-            <div className="text-center text-[7px] text-slate-600 uppercase tracking-[4px]">
-              Regmi Bimal Production System
-            </div>
-          </div>
-
-        </div>
-      );
+  stages.forEach(({key, src, count}) => {
+    if (order.indexOf(key) <= startIdx) return;
+    for (let i = 0; i < count; i++) {
+      const m1 = state[src][i*2], m2 = state[src][i*2+1];
+      const t1 = m1?.winner || '', t2 = m2?.winner || '';
+      const m = state[key][i];
+      if (m.t1 !== t1 || m.t2 !== t2) { m.s1=''; m.s2=''; m.winner=''; }
+      m.t1 = t1; m.t2 = t2;
+      m.winner = computeKOWinner(m);
     }
+  });
 
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<App />);
-  </script>
+  saveState();
+  renderKnockout();
+}
+
+// ============ NAVIGATION ============
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`view-${tab}`).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ============ INIT ============
+loadState();
+renderGroups();
+propagateKnockout();
+</script>
 </body>
 </html>
-
-
-
